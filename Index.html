@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Monchi</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(48,49,49);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: clamp(2.2rem,6vw,3.5rem);
+    text-align: center;
+    margin: 20px;
+    text-shadow: 0 0 10px red, 0 0 25px red;
+}
+
+header {
+    background: #212121;
+    width: 100%;
+    padding: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+header a, .carrito-btn {
+    text-decoration: none;
+    color: white;
+    background: #2a2a2a;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #444;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+header a:hover, .carrito-btn:hover {
+    background: red;
+}
+
+main {
+    width: 92%;
+    max-width: 1000px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 25px;
+}
+
+h2 {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px red;
+    scroll-margin-top: 70px;
+}
+
+.i2, .t3, .Cumbia, .Rap {
+    background: #212121;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 18px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.i2:hover, .t3:hover, .Cumbia:hover, .Rap:hover {
+    transform: translateY(-5px);
+    border-color: red;
+    box-shadow: 0 8px 20px rgba(255,0,0,.25);
+}
+
+h4 {
+    font-family: 'UnifrakturMaguntia', cursive;
+    font-size: 2rem;
+    margin-bottom: 12px;
+    text-shadow: 0 0 8px red;
+}
+
+.i2 img, .t3 img, .Cumbia img, .Rap img {
+    width: 100%;
+    max-width: 240px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.Cumbia img {
+    border-radius: 50%;
+    width: 170px;
+    height: 170px;
+}
+
+main p {
+    color: #aaa;
+    font-size: .9rem;
+    line-height: 1.5;
+    margin: 15px 0;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+input[type="button"] {
+    background: #272727;
+    color: white;
+    border: 1px solid #444;
+    padding: 9px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: .25s;
+}
+
+input[type="button"]:hover {
+    background: red;
+    border-color: red;
+}
+
+/* VENTANAS EMERGENTES */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    inset: 0;
+    background: rgba(0,0,0,.85);
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+.modal-contenido {
+    background: #212121;
+    border: 2px solid red;
+    border-radius: 15px;
+    padding: 25px;
+    width: 100%;
+    max-width: 400px;
+    max-height: 85vh;
+    overflow-y: auto;
+    text-align: center;
+    box-shadow: 0 0 25px red;
+    animation: aparecer .3s ease;
+}
+
+.modal-contenido h2 {
+    color: white;
+    font-size: 2rem;
+}
+
+.modal-contenido p {
+    color: #ccc;
+    margin: 15px 0;
+    line-height: 1.5;
+}
+
+.modal-botones {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.modal-botones button {
+    background: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.modal-botones button:hover {
+    background: white;
+    color: black;
+}
+
+.modal-botones .cancelar {
+    background: #555;
+}
+
+/* CARRITO */
+
+.producto-carrito {
+    background: #303030;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 12px;
+    margin: 12px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.producto-carrito span {
+    color: white;
+    font-weight: bold;
+}
+
+.eliminar {
+    background: #a00000;
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.eliminar:hover {
+    background: red;
+}
+
+.confirmar-carrito {
+    background: #168b38 !important;
+}
+
+.confirmar-carrito:hover {
+    background: #20b94d !important;
+    color: white !important;
+}
+
+.vaciar {
+    background: #555 !important;
+}
+
+.vaciar:hover {
+    background: #777 !important;
+    color: white !important;
+}
+
+#contador {
+    color: white;
+    font-weight: bold;
+}
+
+@keyframes aparecer {
+    from {
+        transform: scale(.7);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+footer {
+    width: 100%;
+    background: #121212;
+    padding: 20px;
+    margin-top: auto;
+    text-align: center;
+    border-top: 2px solid red;
+}
+
+footer h3 {
+    color: #aaa;
+    font-size: .9rem;
+}
+
+@media(max-width:680px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .i2 img, .t3 img, .Cumbia img, .Rap img {
+        max-width: 100%;
+        height: 160px;
+    }
+
+    .Cumbia img {
+        width: 150px;
+        height: 150px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>youtube Monchi</h1>
+
+<header>
+    <a href="#rock">Rock</a>
+    <a href="#Pop">Pop</a>
+    <a href="#Cumbia">Cumbia</a>
+    <a href="#Rap">Rap</a>
+
+    <button class="carrito-btn" onclick="abrirCarrito()">
+        🛒 Ver carrito (<span id="contador">0</span>)
+    </button>
+</header>
+
+<main>
+
+<!-- ROCK -->
+<div>
+<h2 id="rock">Rock</h2>
+<div class="i2">
+    <h4>La Renga</h4>
+    <a href="https://www.youtube.com/watch?t=16&v=7wCyIKcwmQc" target="_blank">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtp5YINKsBeyhRgZaj_GF6DI9HSYkPU22Bu5Lv8LIvARFtn4vrukqKMfmHTKUuu163gBmB_imfxQSY2M9YCgQXMMZU0sVGJnA7kGC0_zIthA&s=10" alt="La Renga">
+    </a>
+    <p>La balada del diablo y la muerte es una de las canciones más conocidas de La Renga.</p>
+    <div class="button-group">
+        <input type="button" value="Ver Info" onclick="mostrarInfo('rock')">
+        <input type="button" value="Comprar Entrada" onclick="agregarAlCarrito('La Renga')">
+    </div>
+</div>
+</div>
+
+<!-- POP -->
+<div>
+<h2 id="Pop">Pop</h2>
+<div class="t3">
+    <h4>Michael Jackson</h4>
+    <a href="https://youtu.be/dsUXAEzaC3Q" target="_blank">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-Er3c5nFlBYOnlMl9TqATJJA4yjuRKBNCNJ1vpJjsxg&s=10" alt="Michael Jackson">
+    </a>
+    <p>Bad es una de las canciones más conocidas de Michael Jackson.</p>
+    <div class="button-group">
+        <input type="button" value="Ver Info" onclick="mostrarInfo('pop')">
+        <input type="button" value="Comprar Entrada" onclick="agregarAlCarrito('Michael Jackson')">
+    </div>
+</div>
+</div>
+
+<!-- CUMBIA -->
+<div>
+<h2 id="Cumbia">Cumbia</h2>
+<div class="Cumbia">
+    <h4>Karina</h4>
+    <a href="https://www.youtube.com/results?search_query=Karina+Diganle" target="_blank">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTL_nBVVqG1LTUFFL7FsjjuTqAOLgfXe2X53iV2rrM3Ew&s=10" alt="Karina">
+    </a>
+    <p>Díganle es uno de los temas más conocidos de Karina.</p>
+    <div class="button-group">
+        <input type="button" value="Ver Info" onclick="mostrarInfo('cumbia')">
+        <input type="button" value="Comprar Entrada" onclick="agregarAlCarrito('Karina')">
+    </div>
+</div>
+</div>
+
+<!-- RAP -->
+<div>
+<h2 id="Rap">Rap</h2>
+<div class="Rap">
+    <h4>Sosa 66s</h4>
+    <a href="https://youtu.be/m35k-BySktM" target="_blank">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIrfpwcpB1RD124o4meYjzmZd5KMTgyYXkLsaf9MUz8g&s=10" alt="Sosa 66s">
+    </a>
+    <p>Mi peor vicio es uno de los temas de Sosa 66s.</p>
+    <div class="button-group">
+        <input type="button" value="Ver Info" onclick="mostrarInfo('rap')">
+        <input type="button" value="Comprar Entrada" onclick="agregarAlCarrito('Sosa 66s')">
+    </div>
+</div>
+</div>
+
+</main>
+
+<!-- VENTANA DE INFORMACIÓN -->
+
+<div class="modal" id="ventana">
+    <div class="modal-contenido">
+        <h2 id="tituloModal"></h2>
+        <p id="textoModal"></p>
+        <div class="modal-botones">
+            <button onclick="cerrarModal()">Aceptar</button>
+        </div>
+    </div>
+</div>
+
+<!-- VENTANA DEL CARRITO -->
+
+<div class="modal" id="carrito">
+    <div class="modal-contenido">
+
+        <h2>🛒 Mi carrito</h2>
+
+        <div id="listaCarrito"></div>
+
+        <p id="totalEntradas"></p>
+
+        <div class="modal-botones">
+            <button class="confirmar-carrito" onclick="confirmarCompra()">
+                Confirmar compra
+            </button>
+
+            <button class="vaciar" onclick="vaciarCarrito()">
+                Vaciar carrito
+            </button>
+
+            <button class="cancelar" onclick="cerrarCarrito()">
+                Cerrar
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!-- VENTANA DE CONFIRMACIÓN -->
+
+<div class="modal" id="confirmacion">
+    <div class="modal-contenido">
+
+        <h2>Confirmación</h2>
+
+        <p>¿Estás seguro de que querés enviar tu pedido por WhatsApp?</p>
+
+        <div class="modal-botones">
+            <button onclick="aceptarCompra()">Sí, confirmar</button>
+
+            <button class="cancelar" onclick="cerrarConfirmacion()">
+                Cancelar
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <h3>Pagina realizada por Monzon y Chacon 5b</h3>
+</footer>
+
+<script>
+
+// INFORMACIÓN DE CADA GÉNERO
+
+const informacion = {
+
+    rock: {
+        titulo: "Rock - La Renga",
+        texto: "La Renga es una banda argentina de hard rock formada en 1988. Se caracteriza por sus canciones de rock nacional y sus grandes recitales. Una de sus canciones más conocidas es La balada del diablo y la muerte."
+    },
+
+    pop: {
+        titulo: "Pop - Michael Jackson",
+        texto: "Michael Jackson fue un cantante, compositor y bailarín estadounidense, conocido como el Rey del Pop. Algunas de sus canciones más famosas son Bad, Thriller y Billie Jean."
+    },
+
+    cumbia: {
+        titulo: "Cumbia - Karina",
+        texto: "Karina, conocida como La Princesita, es una cantante argentina de música tropical. Es reconocida por canciones como Con la misma moneda y Díganle."
+    },
+
+    rap: {
+        titulo: "Rap - Sosa 66s",
+        texto: "Sosa 66s es un artista relacionado con la escena del rap y el trap. Su música combina ritmos urbanos y letras propias del género."
+    }
+
+};
+
+// MOSTRAR INFORMACIÓN
+
+function mostrarInfo(genero) {
+
+    document.getElementById("tituloModal").textContent =
+        informacion[genero].titulo;
+
+    document.getElementById("textoModal").textContent =
+        informacion[genero].texto;
+
+    document.getElementById("ventana").style.display = "flex";
+}
+
+function cerrarModal() {
+    document.getElementById("ventana").style.display = "none";
+}
+
+// CARRITO DE COMPRAS
+
+let carrito = [];
+
+// AGREGAR ENTRADAS
+
+function agregarAlCarrito(artista) {
+
+    carrito.push(artista);
+
+    actualizarContador();
+
+    alert("¡" + artista + " se agregó al carrito!");
+
+}
+
+// ACTUALIZAR CONTADOR
+
+function actualizarContador() {
+
+    document.getElementById("contador").textContent =
+        carrito.length;
+
+}
+
+// ABRIR CARRITO
+
+function abrirCarrito() {
+
+    actualizarCarrito();
+
+    document.getElementById("carrito").style.display = "flex";
+
+}
+
+// CERRAR CARRITO
+
+function cerrarCarrito() {
+
+    document.getElementById("carrito").style.display = "none";
+
+}
+
+// MOSTRAR LAS ENTRADAS DEL CARRITO
+
+function actualizarCarrito() {
+
+    let lista = document.getElementById("listaCarrito");
+
+    let total = document.getElementById("totalEntradas");
+
+    lista.innerHTML = "";
+
+    if (carrito.length === 0) {
+
+        lista.innerHTML = "<p>Tu carrito está vacío.</p>";
+
+        total.textContent = "";
+
+        return;
+
+    }
+
+    carrito.forEach(function(artista, indice) {
+
+        let producto = document.createElement("div");
+
+        producto.className = "producto-carrito";
+
+        let nombre = document.createElement("span");
+
+        nombre.textContent = "🎵 " + artista;
+
+        let boton = document.createElement("button");
+
+        boton.className = "eliminar";
+
+        boton.textContent = "Eliminar";
+
+        boton.onclick = function() {
+            eliminarEntrada(indice);
+        };
+
+        producto.appendChild(nombre);
+
+        producto.appendChild(boton);
+
+        lista.appendChild(producto);
+
+    });
+
+    total.textContent =
+        "Total de entradas: " + carrito.length;
+
+}
+
+// ELIMINAR UNA ENTRADA
+
+function eliminarEntrada(indice) {
+
+    carrito.splice(indice, 1);
+
+    actualizarCarrito();
+
+    actualizarContador();
+
+}
+
+// VACIAR CARRITO
+
+function vaciarCarrito() {
+
+    carrito = [];
+
+    actualizarCarrito();
+
+    actualizarContador();
+
+}
+
+// CONFIRMAR COMPRA
+
+function confirmarCompra() {
+
+    if (carrito.length === 0) {
+
+        alert("Tu carrito está vacío. Agregá una entrada primero.");
+
+        return;
+
+    }
+
+    document.getElementById("carrito").style.display = "none";
+
+    document.getElementById("confirmacion").style.display = "flex";
+
+}
+
+// ENVIAR PEDIDO A WHATSAPP
+
+function aceptarCompra() {
+
+    // CAMBIÁ ESTE NÚMERO POR EL TUYO.
+    // Incluí código de país y área.
+    // Sin espacios, guiones ni signo +
+
+    let telefono = "+54 9 351 550-5712";
+
+    // CREAR LISTA DE ENTRADAS
+
+    let mensaje = "¡Hola! Quiero confirmar mi pedido de entradas:\n\n";
+
+    carrito.forEach(function(artista, indice) {
+
+        mensaje += (indice + 1) + ". " + artista + "\n";
+
+    });
+
+    mensaje += "\nTotal de entradas: " + carrito.length;
+
+    mensaje += "\n\n¡Muchas gracias!";
+
+    // CREAR ENLACE DE WHATSAPP
+
+    let enlace = "https://wa.me/" + telefono +
+        "?text=" + encodeURIComponent(mensaje);
+
+    // CERRAR VENTANA
+
+    document.getElementById("confirmacion").style.display = "none";
+
+    // ABRIR WHATSAPP
+
+    window.open(enlace, "_blank");
+
+    // VACIAR CARRITO
+
+    carrito = [];
+
+    actualizarContador();
+
+    actualizarCarrito();
+
+}
+
+// CANCELAR CONFIRMACIÓN
+
+function cerrarConfirmacion() {
+
+    document.getElementById("confirmacion").style.display = "none";
+
+}
+
+</script>
+
+</body>
+</html>
